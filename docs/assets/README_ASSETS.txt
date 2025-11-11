@@ -1,0 +1,1 @@
+将你的音频文件放在此目录，例如 s1.mp3 … s30.mp3；路径在 sentences.json 的 audio 字段里写成 assets/s1.mp3 等。

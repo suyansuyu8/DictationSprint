@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dictation Sprint 50 · v8</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Dictation Sprint</h1>
+    <p class="subtitle">每日十句 · 听写—比对—改正—巩固</p>
+  </header>
+
+  <main class="container">
+    <section id="status">
+      <div>今日进度：<span id="progress">0/10</span></div>
+      <div>当前 WER：<span id="wer">—</span> | 当前 WPM：<span id="wpm">—</span></div>
+    </section>
+
+    <section id="player">
+      <audio id="audio" controls preload="auto"></audio>
+      <button id="btnPrev">上一句</button>
+      <button id="btnNext">下一句</button>
+      <label>播放速率
+        <input id="rate" type="number" step="0.1" min="0.5" max="1.5" value="1.0"/>
+      </label>
+    </section>
+
+    <section id="work">
+      <div id="prompt" class="muted">点击“下一句”开始</div>
+      <textarea id="input" rows="4" placeholder="在此输入听到的句子…"></textarea>
+      <div class="actions">
+        <button id="btnSubmit">提交比对</button>
+        <button id="btnReveal">显示原文</button>
+        <button id="btnRetry">重听本句</button>
+        <label><input id="addToReview" type="checkbox" /> 将错词加入复训清单</label>
+      </div>
+      <div id="diff" class="diff"></div>
+    </section>
+
+    <section id="review">
+      <h2>错词清单</h2>
+      <div class="actions">
+        <button id="btnExportReviewCsv">导出错词清单 CSV</button>
+        <button id="btnGenerateReviewSet">按词频一键生成 20 句复训集</button>
+      </div>
+      <div id="reviewWords" class="chiplist"></div>
+    </section>
+
+    <section id="export">
+      <button id="btnSave">保存本地</button>
+      <button id="btnExportJson">导出 JSON</button>
+      <button id="btnExportCsv">导出 CSV</button>
+      <span id="saveHint" class="muted"></span>
+    </section>
+
+    <section id="assess">
+      <h2>评测面板</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>前测/后测导入</h3>
+          <p class="muted">支持导入本应用导出的 JSON 或 CSV。建议前测与后测各使用 50 句保留集。</p>
+          <div class="importers">
+            <label>前测 <input type="file" id="preFile" accept=".json,.csv" /></label>
+            <label>后测 <input type="file" id="postFile" accept=".json,.csv" /></label>
+            <button id="btnImportAssess">导入并比较</button>
+          </div>
+          <div id="assessStats" class="stats muted">尚未导入数据。</div>
+        </div>
+        <div class="card">
+          <h3>趋势曲线</h3>
+          <div class="segmented" id="rangeTabs">
+            <button class="seg active" data-range="7">近7天</button>
+            <button class="seg" data-range="14">近14天</button>
+            <button class="seg" data-range="30">近30天</button>
+          </div>
+          <p class="muted">基于最近 30 天的本地会话日志计算每日中位 WER/WPM，并绘制所选范围内的滑动中位数（窗口≤7）。</p>
+          <canvas id="chartWER" width="720" height="220"></canvas>
+          <canvas id="chartWPM" width="720" height="220"></canvas>
+          <div class="actions">
+            <button id="btnRefreshCharts">刷新曲线</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>指定日期范围导出/合并</h3>
+          <p class="muted">选择开始与结束日期（含），将本地日志合并导出为单个 JSON 或 CSV，并可归档清理旧会话。</p>
+          <div class="range">
+            <label>开始 <input type="date" id="rangeStart"></label>
+            <label>结束 <input type="date" id="rangeEnd"></label>
+            <button id="btnExportRangeJson">导出 JSON</button>
+            <button id="btnExportRangeCsv">导出 CSV</button>
+            <button id="btnArchiveRange">归档并清理</button>
+          </div>
+          <div id="rangeHint" class="muted"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container muted">
+    <small>数据仅保存在本地浏览器。建议每周导出备份。</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
